@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { PieChart as PieChartIcon, BarChartHorizontal } from 'lucide-react';
+import { PieChartIcon, BarChartHorizontal } from 'lucide-react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import { Expense, ExpenseCategory, getCategoryColor } from '@/utils/types';
 
@@ -90,6 +90,55 @@ const ExpenseChart: React.FC<ExpenseChartProps> = ({ expenses }) => {
                 <span>Bar Chart</span>
               </TabsTrigger>
             </TabsList>
+            {chartData.length === 0 ? (
+              <div className="h-64 flex items-center justify-center text-gray-500 mt-6">
+                No expense data available for the selected period
+              </div>
+            ) : (
+              <>
+                <TabsContent value="pie" className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={chartData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={renderCustomizedLabel}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {chartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip formatter={(value: number) => [`$${value.toFixed(2)}`, 'Amount']} />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </TabsContent>
+                <TabsContent value="bar" className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={chartData}
+                      layout="vertical"
+                      margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis type="number" tickFormatter={(value) => `$${value}`} />
+                      <YAxis dataKey="name" type="category" width={100} />
+                      <Tooltip formatter={(value: number) => [`$${value.toFixed(2)}`, 'Amount']} />
+                      <Bar dataKey="value" barSize={20}>
+                        {chartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </TabsContent>
+              </>
+            )}
           </Tabs>
         </div>
         <div className="flex items-center justify-between">
@@ -111,54 +160,7 @@ const ExpenseChart: React.FC<ExpenseChartProps> = ({ expenses }) => {
         </div>
       </CardHeader>
       <CardContent className="pt-4">
-        {chartData.length === 0 ? (
-          <div className="h-64 flex items-center justify-center text-gray-500">
-            No expense data available for the selected period
-          </div>
-        ) : (
-          <TabsContent value={chartType} className="h-64 -mt-6">
-            {chartType === 'pie' ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={chartData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={renderCustomizedLabel}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {chartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value: number) => [`$${value.toFixed(2)}`, 'Amount']} />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={chartData}
-                  layout="vertical"
-                  margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis type="number" tickFormatter={(value) => `$${value}`} />
-                  <YAxis dataKey="name" type="category" width={100} />
-                  <Tooltip formatter={(value: number) => [`$${value.toFixed(2)}`, 'Amount']} />
-                  <Bar dataKey="value" barSize={20}>
-                    {chartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            )}
-          </TabsContent>
-        )}
+        {/* This section is now moved inside the Tabs component above */}
       </CardContent>
     </Card>
   );
