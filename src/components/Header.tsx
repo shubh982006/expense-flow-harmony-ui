@@ -3,20 +3,13 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LogOut, User, PieChart, Home } from 'lucide-react';
-import { authService } from '@/services/supabaseService';
-import { toast } from 'sonner';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    try {
-      await authService.logout();
-      navigate('/');
-      toast.success('Logged out successfully');
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to logout');
-    }
+  const handleLogout = () => {
+    // In a real app, we'd clear authentication state here
+    navigate('/');
   };
 
   return (

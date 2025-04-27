@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
@@ -5,33 +6,30 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { Lock, Mail, ArrowRight } from 'lucide-react';
-import { authService } from '@/services/supabaseService';
 
 const Index = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !password) {
-      toast.error('Please enter both email and password');
+    if (!username || !password) {
+      toast.error('Please enter both username and password');
       return;
     }
     
     setIsLoading(true);
     
-    try {
-      await authService.login({ email, password });
+    // Simulate login API call
+    setTimeout(() => {
+      setIsLoading(false);
+      // For demo purposes, any credentials will work
       toast.success('Login successful!');
       navigate('/dashboard');
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to login');
-    } finally {
-      setIsLoading(false);
-    }
+    }, 1000);
   };
 
   return (
@@ -58,10 +56,10 @@ const Index = () => {
                   <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                   <Input
                     type="text"
-                    placeholder="Email"
+                    placeholder="Username or Email"
                     className="pl-10"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
               </div>
