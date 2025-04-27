@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
@@ -6,30 +5,33 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { Lock, Mail, ArrowRight } from 'lucide-react';
+import { authService } from '@/services/supabaseService';
 
 const Index = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!username || !password) {
-      toast.error('Please enter both username and password');
+    if (!email || !password) {
+      toast.error('Please enter both email and password');
       return;
     }
     
     setIsLoading(true);
     
-    // Simulate login API call
-    setTimeout(() => {
-      setIsLoading(false);
-      // For demo purposes, any credentials will work
+    try {
+      await authService.login({ email, password });
       toast.success('Login successful!');
       navigate('/dashboard');
-    }, 1000);
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to login');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -56,10 +58,10 @@ const Index = () => {
                   <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                   <Input
                     type="text"
-                    placeholder="Username or Email"
+                    placeholder="Email"
                     className="pl-10"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
               </div>

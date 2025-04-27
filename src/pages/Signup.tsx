@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { Lock, Mail, User, ArrowRight } from 'lucide-react';
+import { authService } from '@/services/supabaseService';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email || !username || !password || !confirmPassword) {
@@ -30,13 +31,15 @@ const Signup = () => {
     
     setIsLoading(true);
     
-    // Simulate signup API call
-    setTimeout(() => {
+    try {
+      await authService.register({ email, password, username });
+      toast.success('Account created successfully! Please check your email to verify your account.');
+      navigate('/');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to create account');
+    } finally {
       setIsLoading(false);
-      // For demo purposes, any valid input will work
-      toast.success('Account created successfully!');
-      navigate('/dashboard');
-    }, 1000);
+    }
   };
 
   return (

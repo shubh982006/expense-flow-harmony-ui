@@ -3,8 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import { ExpenseCreate, IncomeUpdate, UserRegisterData } from '@/types/api';
 
 const supabase = createClient(
-  process.env.VITE_SUPABASE_URL!,
-  process.env.VITE_SUPABASE_ANON_KEY!
+  import.meta.env.VITE_SUPABASE_URL!,
+  import.meta.env.VITE_SUPABASE_ANON_KEY!
 );
 
 export const authService = {
@@ -41,7 +41,7 @@ export const expenseService = {
   async addExpense(expense: ExpenseCreate) {
     const { data, error } = await supabase
       .from('expenses')
-      .insert([expense])
+      .insert([{ ...expense, user_id: supabase.auth.getUser() }])
       .select();
     if (error) throw error;
     return data;
@@ -68,7 +68,7 @@ export const expenseService = {
   async updateIncome(income: IncomeUpdate) {
     const { data, error } = await supabase
       .from('income')
-      .upsert([income])
+      .upsert([{ ...income, user_id: supabase.auth.getUser() }])
       .select();
     if (error) throw error;
     return data;
@@ -126,3 +126,4 @@ export const visualizationService = {
     return data;
   }
 };
+
