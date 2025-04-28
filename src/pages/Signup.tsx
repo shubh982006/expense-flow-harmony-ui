@@ -1,30 +1,36 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { Lock, Mail, User, ArrowRight } from 'lucide-react';
+import { Lock, Mail, User, ArrowRight, DollarSign } from 'lucide-react';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [monthlyIncome, setMonthlyIncome] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !username || !password || !confirmPassword) {
+    if (!email || !username || !password || !confirmPassword || !monthlyIncome) {
       toast.error('Please fill in all fields');
       return;
     }
 
     if (password !== confirmPassword) {
       toast.error('Passwords do not match');
+      return;
+    }
+
+    const income = parseFloat(monthlyIncome);
+    if (isNaN(income) || income <= 0) {
+      toast.error('Please enter a valid monthly income');
       return;
     }
     
@@ -82,6 +88,22 @@ const Signup = () => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="relative">
+                  <DollarSign className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                  <Input
+                    type="number"
+                    placeholder="Monthly Income"
+                    className="pl-10"
+                    value={monthlyIncome}
+                    onChange={(e) => setMonthlyIncome(e.target.value)}
+                    required
+                    min="0"
+                    step="0.01"
                   />
                 </div>
               </div>

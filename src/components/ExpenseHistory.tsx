@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,12 +11,15 @@ import {
   GraduationCap,
   Baby,
   MoreHorizontal,
-  Search
+  Search,
+  Trash2
 } from 'lucide-react';
 import { Expense, ExpenseCategory } from '@/utils/types';
+import { Button } from '@/components/ui/button';
 
 interface ExpenseHistoryProps {
   expenses: Expense[];
+  onDeleteExpense: (expenseId: string) => void;
 }
 
 const getCategoryIcon = (category: ExpenseCategory) => {
@@ -48,7 +50,7 @@ const getCategoryColor = (category: ExpenseCategory): string => {
   }
 };
 
-const ExpenseHistory: React.FC<ExpenseHistoryProps> = ({ expenses }) => {
+const ExpenseHistory: React.FC<ExpenseHistoryProps> = ({ expenses, onDeleteExpense }) => {
   const [searchTerm, setSearchTerm] = useState('');
   
   const filteredExpenses = expenses.filter(expense => 
@@ -116,6 +118,16 @@ const ExpenseHistory: React.FC<ExpenseHistoryProps> = ({ expenses }) => {
                     
                     <div className="text-right">
                       <div className="font-semibold">${expense.amount.toFixed(2)}</div>
+                      <div className="flex items-center space-x-4">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onDeleteExpense(expense.id)}
+                          className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
