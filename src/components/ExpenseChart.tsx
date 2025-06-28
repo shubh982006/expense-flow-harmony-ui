@@ -91,7 +91,7 @@ const ExpenseChart: React.FC<ExpenseChartProps> = ({ expenses }) => {
               </TabsTrigger>
             </TabsList>
             {chartData.length === 0 ? (
-              <div className="h-64 flex items-center justify-center text-gray-500 mt-6">
+              <div className="h-64 flex items-center justify-center text-gray-500 mt-4">
                 No expense data available for the selected period
               </div>
             ) : (
@@ -160,7 +160,7 @@ const ExpenseChart: React.FC<ExpenseChartProps> = ({ expenses }) => {
         </div>
       </CardHeader>
       <CardContent className="pt-4">
-        {/* This section is now moved inside the Tabs component above */}
+        {/* Empty CardContent as the chart content is now inside the Tabs */}
       </CardContent>
     </Card>
   );

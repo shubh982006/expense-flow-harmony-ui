@@ -1,17 +1,10 @@
 
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LogOut, User, PieChart, Home } from 'lucide-react';
 
 const Header: React.FC = () => {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    // In a real app, we'd clear authentication state here
-    navigate('/');
-  };
-
   return (
     <header className="bg-white shadow-sm py-4 px-6">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -39,7 +32,7 @@ const Header: React.FC = () => {
         
         <Button 
           variant="ghost" 
-          onClick={handleLogout} 
+          onClick={() => window.location.href = '/'}
           className="text-gray-700 hover:text-red-500 hover:bg-red-50"
         >
           <LogOut size={18} className="mr-2" />
